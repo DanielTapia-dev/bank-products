@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import type { PaginatedResponse } from './products-api.service';
 import { ProductsApiService } from './products-api.service';
 import { environment } from '../../../../environments/environment';
+import type { Product } from '../models/product.model';
 
 describe('ProductsApiService', () => {
   let service: ProductsApiService;
@@ -21,8 +23,8 @@ describe('ProductsApiService', () => {
   });
 
   it('List service without params', () => {
-    const mockResponse = { items: [], total: 0 };
-    let result: any;
+    const mockResponse: PaginatedResponse<Product> = { items: [], total: 0 };
+    let result: PaginatedResponse<Product> | undefined;
 
     service.list().subscribe((res) => (result = res));
 
@@ -38,8 +40,8 @@ describe('ProductsApiService', () => {
   });
 
   it(`List service with params`, () => {
-    const mockResponse = { items: [{ id: '1' }], total: 1 };
-    let result: any;
+    const mockResponse: PaginatedResponse<Product> = { items: [{ id: '1' } as Product], total: 1 };
+    let result: PaginatedResponse<Product> | undefined;
 
     service.list({ q: 'visa', page: 2, size: 20 }).subscribe((res) => (result = res));
 
@@ -57,7 +59,7 @@ describe('ProductsApiService', () => {
 
   it('Get by id', () => {
     const mockProduct = { id: 'abc', name: 'X' } as any;
-    let result: any;
+    let result: Product | undefined;
 
     service.get('abc').subscribe((res) => (result = res));
 
@@ -72,7 +74,7 @@ describe('ProductsApiService', () => {
   });
 
   it('verify products by id', () => {
-    let result: any;
+    let result: { exists: boolean } | undefined;
 
     service.verifyId('XYZ').subscribe((res) => (result = res));
 
@@ -87,7 +89,7 @@ describe('ProductsApiService', () => {
   it('create product', () => {
     const input = { id: 'p1', name: 'Prod 1' } as any;
     const server = { ...input, createAt: '2025-01-01' };
-    let result: any;
+    let result: Product | undefined;
 
     service.create(input).subscribe((res) => (result = res));
 
@@ -104,7 +106,7 @@ describe('ProductsApiService', () => {
   it('update product', () => {
     const patch = { name: 'Nuevo nombre' };
     const server = { id: 'p1', name: 'Nuevo nombre' };
-    let result: any;
+    let result: Product | undefined;
 
     service.update('p1', patch).subscribe((res) => (result = res));
 
@@ -119,7 +121,7 @@ describe('ProductsApiService', () => {
   });
 
   it('remove product', () => {
-    let result: any;
+    let result: void | undefined;
 
     service.remove('p9').subscribe((res) => (result = res));
 

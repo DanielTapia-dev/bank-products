@@ -10,7 +10,7 @@ Proyecto desarrollado en **Angular 17** como parte de la prueba técnica para Nt
 | -------------------- | ------------------------------------------ |
 | Framework            | Angular 17                                 |
 | Testing              | Jest con Angular                           |
-| Code Coverage        | Mínimo requerido: **80%**                  |
+| Code Coverage        | Mínimo requerido: **70%**                  |
 | Hooks de calidad     | Husky + lint-staged                        |
 | Estándares de código | ESLint mejorado para Angular               |
 | Formateo             | Prettier automático al guardar y commitear |

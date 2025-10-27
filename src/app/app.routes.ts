@@ -1,8 +1,11 @@
 import type { Routes } from '@angular/router';
-import { HomeComponent } from './features/home/home/home.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: '**', redirectTo: 'home' },
+  { path: '', redirectTo: 'products', pathMatch: 'full' },
+  {
+    path: 'products',
+    loadChildren: () =>
+      import('./features/products/products-routing.module').then((m) => m.PRODUCTS_ROUTES),
+  },
+  { path: '**', redirectTo: 'products' },
 ];

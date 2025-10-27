@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "🔍 Running tests & checking coverage (min 80%)..."
+
+npm run test:cov --silent
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+  echo "❌ Push rejected: Coverage must be at least 80%."
+  echo "💡 Fix it running: npm run test:cov"
+  exit 1
+fi
+
+echo "✅ Coverage OK — Push allowed 🚀"

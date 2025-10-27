@@ -1,27 +1,49 @@
-# BankProducts
+# Bank Products – Frontend Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Proyecto desarrollado en **Angular 17** como parte de la prueba técnica para Ntt Data. El enfoque principal de este proyecto es demostrar **capacidades técnicas profesionales**, aplicando **buenas prácticas**, **arquitectura mantenible** y **calidad de código garantizada** mediante **Testing + Coverage + Linter + Husky**.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Características principales implementadas hasta hoy
 
-## Code scaffolding
+| Área                 | Implementación                             |
+| -------------------- | ------------------------------------------ |
+| Framework            | Angular 17                                 |
+| Testing              | Jest con Angular                           |
+| Code Coverage        | Mínimo requerido: **80%**                  |
+| Hooks de calidad     | Husky + lint-staged                        |
+| Estándares de código | ESLint mejorado para Angular               |
+| Formateo             | Prettier automático al guardar y commitear |
+| Clean Git            | Bloqueo de código sucio vía pre-commit     |
+| Calidad continua     | Bloqueo de push si coverage < 80%          |
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## Calidad del código garantizada
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Este proyecto implementa **control automático de calidad**, protegido a nivel local y remoto:
 
-## Running unit tests
+✅ **Pre-commit** – ejecuta ESLint y limpia formato con Prettier  
+✅ **Pre-push** – ejecuta Jest con code coverage mínimo del **80%**  
+✅ No se permite código con `console.log`  
+✅ Los errores de estilo se corrigen automáticamente antes del commit  
+✅ Nadie puede subir código que rompa tests o cobertura
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## Testing configurado con Jest
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+El proyecto usa **Jest** en lugar de Karma/Jasmine para pruebas unitarias por ser:
 
-## Further help
+- Más rápido
+- Mejor soporte en CI/CD
+- Mejor desarrollo basado en pruebas (TDD)
+- Soporte completo para Angular Standalone y TestBed
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Comandos:
+
+```bash
+npm run test
+npm run test:watch
+npm run test:cov
+```

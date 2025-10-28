@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import type { PaginatedResponse } from './products-api.service';
 import { ProductsApiService } from './products-api.service';
 import { environment } from '../../../../environments/environment';
 import type { Product } from '../models/product.model';
@@ -23,8 +22,8 @@ describe('ProductsApiService', () => {
   });
 
   it('List service without params', () => {
-    const mockResponse: PaginatedResponse<Product> = { items: [], total: 0 };
-    let result: PaginatedResponse<Product> | undefined;
+    const mockResponse: Product[] = [];
+    let result: Product[] | undefined;
 
     service.list().subscribe((res) => (result = res));
 
@@ -39,9 +38,9 @@ describe('ProductsApiService', () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it(`List service with params`, () => {
-    const mockResponse: PaginatedResponse<Product> = { items: [{ id: '1' } as Product], total: 1 };
-    let result: PaginatedResponse<Product> | undefined;
+  it('List service with params', () => {
+    const mockResponse: Product[] = [{ id: '1' } as Product];
+    let result: Product[] | undefined;
 
     service.list({ q: 'visa', page: 2, size: 20 }).subscribe((res) => (result = res));
 
@@ -58,7 +57,7 @@ describe('ProductsApiService', () => {
   });
 
   it('Get by id', () => {
-    const mockProduct = { id: 'abc', name: 'X' } as any;
+    const mockProduct = { id: 'abc', name: 'X' } as Product;
     let result: Product | undefined;
 
     service.get('abc').subscribe((res) => (result = res));
@@ -74,7 +73,7 @@ describe('ProductsApiService', () => {
   });
 
   it('verify products by id', () => {
-    let result: { exists: boolean } | undefined;
+    let result: boolean | undefined;
 
     service.verifyId('XYZ').subscribe((res) => (result = res));
 
@@ -82,13 +81,15 @@ describe('ProductsApiService', () => {
       (r) => r.method === 'GET' && r.url === `${environment.apiUrl}/products/verification/XYZ`,
     );
 
-    req.flush({ exists: true });
-    expect(result).toEqual({ exists: true });
+    const payload = true;
+    req.flush(payload);
+
+    expect(result).toEqual(payload);
   });
 
   it('create product', () => {
-    const input = { id: 'p1', name: 'Prod 1' } as any;
-    const server = { ...input, createAt: '2025-01-01' };
+    const input = { id: 'p1', name: 'Prod 1' } as Product;
+    const server = { ...input, createdAt: '2025-01-01' } as any;
     let result: Product | undefined;
 
     service.create(input).subscribe((res) => (result = res));
@@ -105,7 +106,7 @@ describe('ProductsApiService', () => {
 
   it('update product', () => {
     const patch = { name: 'Nuevo nombre' };
-    const server = { id: 'p1', name: 'Nuevo nombre' };
+    const server = { id: 'p1', name: 'Nuevo nombre' } as Product;
     let result: Product | undefined;
 
     service.update('p1', patch).subscribe((res) => (result = res));

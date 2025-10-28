@@ -16,24 +16,20 @@ export class ProductsApiService {
   private http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/products`;
 
-  list(params?: {
-    q?: string;
-    page?: number;
-    size?: number;
-  }): Observable<PaginatedResponse<Product>> {
+  list(params?: { q?: string; page?: number; size?: number }): Observable<Product[]> {
     let httpParams = new HttpParams();
     if (params?.q) httpParams = httpParams.set('q', params.q);
     if (params?.page != null) httpParams = httpParams.set('page', params.page);
     if (params?.size != null) httpParams = httpParams.set('size', params.size);
-    return this.http.get<PaginatedResponse<Product>>(this.base, { params: httpParams });
+    return this.http.get<Product[]>(this.base, { params: httpParams });
   }
 
   get(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.base}/${id}`);
   }
 
-  verifyId(id: string): Observable<{ exists: boolean }> {
-    return this.http.get<{ exists: boolean }>(`${this.base}/verification/${id}`);
+  verifyId(id: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.base}/verification/${id}`);
   }
 
   create(product: Product): Observable<Product> {

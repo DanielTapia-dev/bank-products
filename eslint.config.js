@@ -38,8 +38,28 @@ module.exports = tseslint.config(
       'no-console': ['error', { allow: ['warn', 'error'] }],
       'no-debugger': 'error',
 
-      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          disallowTypeAnnotations: false,
+          fixStyle: 'inline-type-imports',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+  {
+    files: [
+      '**/*.component.ts',
+      '**/*.directive.ts',
+      '**/*.pipe.ts',
+      '**/*.module.ts',
+      '**/*.page.ts',
+      '**/*.store.ts',
+      '**/*.service.ts',
+    ],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
   {

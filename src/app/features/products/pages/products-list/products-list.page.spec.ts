@@ -4,7 +4,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ProductsListPage } from './products-list.page';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-import { ProductsStore } from '../../../../../state/products.state';
+import { ProductsStore } from '../../../../state/products.state';
 import { Router } from '@angular/router';
 
 describe('ProductsListComponent', () => {

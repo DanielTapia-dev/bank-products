@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { ProductsStore } from '../../../../../state/products.state';
-import { Product } from '../../../models/product.model';
+import { ProductsStore } from '../../../../state/products.state';
+import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 

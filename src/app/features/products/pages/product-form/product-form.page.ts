@@ -8,19 +8,19 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsApiService } from '../../../services/products-api.service';
-import { ProductsStore } from '../../../../../state/products.state';
-import { Product } from '../../../models/product.model';
-import { S3StorageService } from '../../../../../shared/s3/s3-storage.service';
+import { ProductsApiService } from '../../services/products-api.service';
+import { ProductsStore } from '../../../../state/products.state';
+import { Product } from '../../models/product.model';
+import { S3StorageService } from '../../../../shared/s3/s3-storage.service';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './product-create.page.html',
-  styleUrls: ['./product-create.page.scss'],
+  templateUrl: './product-form.page.html',
+  styleUrls: ['./product-form.page.scss'],
 })
-export class ProductCreatePage implements OnInit {
+export class ProductFormPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

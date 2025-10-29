@@ -1,0 +1,37 @@
+[data-skel-on] {
+  pointer-events: none;
+}
+
+.grid.row[data-skel-row] {
+  position: relative;
+  min-height: 2rem;
+  margin-bottom: 2px;
+}
+
+[data-skel-on] .grid.row[data-skel-row] > * {
+  opacity: 0;
+}
+
+.grid.row[data-skel-row]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0.15) 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: skel-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes skel-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

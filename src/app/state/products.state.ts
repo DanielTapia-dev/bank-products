@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ProductsApiService } from '../features/products/services/products-api.service';
-import { BehaviorSubject, finalize, map } from 'rxjs';
+import { BehaviorSubject, delay, finalize, map } from 'rxjs';
 import type { Product } from '../features/products/models/product.model';
 
 type Nullable<T> = T | null;
@@ -58,7 +58,10 @@ export class ProductsStore {
 
     this.api
       .list({ q, page, size })
-      .pipe(finalize(() => this.patch({ loading: false })))
+      .pipe(
+        delay(2000),
+        finalize(() => this.patch({ loading: false })),
+      )
       .subscribe({
         next: (items) => {
           this.patch({

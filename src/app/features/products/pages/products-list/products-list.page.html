@@ -40,7 +40,15 @@
           <div class="grid row" data-skel-row *ngFor="let _ of [1,2,3,4,5]"></div>
         </ng-container>
 
-        <div class="grid row" *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById">
+        <div
+          class="grid row clickeable"
+          *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById"
+          [routerLink]="['/products', p.id, 'edit']"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="$event.preventDefault(); $any($event.target).click()"
+          (keydown.space)="$event.preventDefault(); $any($event.target).click()"
+        >
           <div class="logo">
             <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />
             <span *ngIf="!p.logo" class="logo-fallback">{{ p.name | slice:0:2 }}</span>

@@ -1,15 +1,15 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { ProductCreatePage } from './product-create.page';
+import { ProductFormPage } from './product-form.page';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProductsApiService } from '../../../services/products-api.service';
-import { ProductsStore } from '../../../../../state/products.state';
-import { S3StorageService } from '../../../../../shared/s3/s3-storage.service';
+import { ProductsApiService } from '../../services/products-api.service';
+import { ProductsStore } from '../../../../state/products.state';
+import { S3StorageService } from '../../../../shared/s3/s3-storage.service';
 
 describe('ProductCreatePage (full simple coverage)', () => {
-  let component: ProductCreatePage;
-  let fixture: ComponentFixture<ProductCreatePage>;
+  let component: ProductFormPage;
+  let fixture: ComponentFixture<ProductFormPage>;
 
   const mockRouter = { navigate: jest.fn() };
   const mockRoute = { snapshot: { paramMap: { get: jest.fn().mockReturnValue(null) } } };
@@ -22,14 +22,14 @@ describe('ProductCreatePage (full simple coverage)', () => {
   const mockS3 = { upload: jest.fn().mockResolvedValue('https://cdn.example.com/logo.png') };
 
   const create = () => {
-    fixture = TestBed.createComponent(ProductCreatePage);
+    fixture = TestBed.createComponent(ProductFormPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductCreatePage],
+      imports: [ProductFormPage],
       providers: [
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockRoute },
@@ -40,7 +40,7 @@ describe('ProductCreatePage (full simple coverage)', () => {
     }).compileComponents();
 
     jest.clearAllMocks();
-    (mockRoute.snapshot.paramMap.get as jest.Mock).mockReturnValue(null); // modo crear por defecto
+    (mockRoute.snapshot.paramMap.get as jest.Mock).mockReturnValue(null);
     create();
   });
 
@@ -143,7 +143,6 @@ describe('ProductCreatePage (full simple coverage)', () => {
     (mockRoute.snapshot.paramMap.get as jest.Mock).mockReturnValue('P1');
     mockApi.get.mockReturnValue(of(product));
 
-    // recrea componente en modo editar
     create();
 
     expect(component.isEditMode).toBe(true);

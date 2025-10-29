@@ -1,14 +1,14 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { ProductsStore } from '../../../../../state/products.state';
-import { Product } from '../../../models/product.model';
+import { ProductsStore } from '../../../../state/products.state';
+import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './products-list.page.html',
   styleUrl: './products-list.page.scss',
 })

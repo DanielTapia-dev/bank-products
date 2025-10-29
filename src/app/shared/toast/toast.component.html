@@ -1,0 +1,22 @@
+<div class="toast-container" aria-live="polite" aria-atomic="true">
+  <div *ngFor="let t of toasts" class="toast" [ngClass]="kindClass(t.type)" role="status">
+    <div class="toast__icon" aria-hidden="true">
+      <span *ngIf="t.type === 'success'">✔</span>
+      <span *ngIf="t.type === 'error'">✖</span>
+      <span *ngIf="t.type === 'info'">ℹ</span>
+      <span *ngIf="t.type === 'warning'">⚠</span>
+    </div>
+
+    <div class="toast__content">{{ t.message }}</div>
+
+    <button
+      class="toast__close"
+      (click)="close(t.id)"
+      aria-label="Cerrar notificación"
+      title="Cerrar"
+      type="button"
+    >
+      ×
+    </button>
+  </div>
+</div>

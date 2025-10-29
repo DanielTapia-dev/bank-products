@@ -12,6 +12,7 @@ import { ProductsApiService } from '../../services/products-api.service';
 import { ProductsStore } from '../../../../state/products.state';
 import { Product } from '../../models/product.model';
 import { S3StorageService } from '../../../../shared/s3/s3-storage.service';
+import { ToastService } from '../../../../shared/toast/services/toast.service';
 
 @Component({
   selector: 'app-product-form',
@@ -27,6 +28,7 @@ export class ProductFormPage implements OnInit {
   private readonly api = inject(ProductsApiService);
   private readonly store = inject(ProductsStore);
   private readonly directS3 = inject(S3StorageService);
+  private readonly toast = inject(ToastService);
 
   logoPreviewUrl: string | null = null;
   isEditMode = false;
@@ -136,22 +138,17 @@ export class ProductFormPage implements OnInit {
 
     const onDone = () => {
       this.store.load();
+      this.toast.success('Producto guardado correctamente', 2000);
       this.router.navigate(['/products']);
     };
 
     if (this.isEditMode) {
       this.api.update(product.id, product).subscribe({
         next: onDone,
-        error: () => {
-          //TODO: manejar errores
-        },
       });
     } else {
       this.api.create(product).subscribe({
         next: onDone,
-        error: () => {
-          //TODO: manejar errores
-        },
       });
     }
   }

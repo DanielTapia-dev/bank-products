@@ -8,4 +8,10 @@ export enum ToastKind {
 export interface ToastEvent {
   type: ToastKind;
   message: string;
+  durationMs?: number;
+}
+
+export interface ToastItem extends ToastEvent {
+  id: string;
+  createdAt: number;
 }

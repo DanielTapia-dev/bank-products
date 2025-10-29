@@ -1,0 +1,17 @@
+.main-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+  background-color: var(--auxiliary-color);
+
+  .main-content {
+    flex: 1;
+    padding: 24px;
+    margin-top: 2rem;
+    margin-inline: 5rem;
+
+    @media screen and (max-width: 1000px) {
+      margin-inline: 1rem;
+      padding: 1rem;
+    }
+  }
+}

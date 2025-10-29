@@ -1,1 +1,84 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: #fdd835;
+  --primary-dark: #fbc02d;
+  --secondary-color: #2c3b69;
+  --secondary-dark: #afbee9;
+  --accent-color: #2c3b69;
+  --text-color: #212121;
+  --border-color: #e0e0e0;
+  --auxiliary-color: #f4f6fb;
+  --back-color: #f8f9fa;
+  --success: #4caf50;
+  --error: #f44336;
+  --info: #2196f3;
+  --warning: #ff9800;
+  --font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 0.72rem;
+  height: 100vh;
+  overflow: hidden;
+}
+
+input,
+select,
+textarea {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+}
+
+button.secondary {
+  background-color: var(--auxiliary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 8px;
+  padding: 20px 20px;
+  font-weight: bold;
+  font-family: var(--font-family);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button.secondary:disabled {
+  background-color: rgba(53, 123, 253, 0.5);
+  cursor: not-allowed;
+}
+
+button.secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 8px;
+  padding: 15px 20px;
+  font-weight: bold;
+  font-family: var(--font-family);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button.primary:disabled {
+  background-color: rgba(253, 216, 53, 0.5);
+  cursor: not-allowed;
+}
+
+button.primary:hover {
+  background-color: var(--primary-dark);
+}

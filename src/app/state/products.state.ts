@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ProductsApiService } from '../features/products/services/products-api.service';
-import { BehaviorSubject, finalize } from 'rxjs';
+import { BehaviorSubject, finalize, map } from 'rxjs';
 import type { Product } from '../features/products/models/product.model';
 
 type Nullable<T> = T | null;
@@ -29,7 +29,23 @@ export class ProductsStore {
     error: null,
   });
 
-  readonly vm$ = this.state$.asObservable();
+  readonly vm$ = this.state$.pipe(
+    map((state) => {
+      const query = state.q?.toLowerCase().trim();
+      const filtered = query
+        ? state.items.filter(
+            (p) =>
+              p.name?.toLowerCase().includes(query) || p.description?.toLowerCase().includes(query),
+          )
+        : state.items;
+
+      return {
+        ...state,
+        items: filtered,
+        total: filtered.length,
+      };
+    }),
+  );
 
   get snapshot(): ProductsState {
     return this.state$.value;
@@ -58,7 +74,6 @@ export class ProductsStore {
 
   setQuery(q: string): void {
     this.patch({ q, page: 1 });
-    this.load();
   }
 
   setPage(page: number): void {

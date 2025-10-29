@@ -3,64 +3,73 @@ import { inject } from '@angular/core';
 import { ToastService } from '../../shared/toast/services/toast.service';
 import { catchError, throwError } from 'rxjs';
 
+interface BackendError {
+  message?: string;
+  errors?: Record<string, string | { message: string }>;
+}
+
+const MESSAGES = {
+  network: 'Sin conexión con el servidor',
+  unexpected: 'Error inesperado',
+  notFound: 'No se encontró el recurso solicitado.',
+  invalidData: 'Datos inválidos.',
+  unknown: 'Ocurrió un error',
+};
+
 function actionFrom(
   req: HttpRequest<unknown>,
 ): 'create' | 'update' | 'delete' | 'verify' | 'other' {
-  const url = req.url;
-  const method = req.method.toUpperCase();
-
+  const { url, method } = req;
+  const m = method.toUpperCase();
   if (url.includes('/bp/products/verification/')) return 'verify';
   if (url.includes('/bp/products')) {
-    if (method === 'POST') return 'create';
-    if (method === 'PUT') return 'update';
-    if (method === 'DELETE') return 'delete';
+    if (m === 'POST') return 'create';
+    if (m === 'PUT') return 'update';
+    if (m === 'DELETE') return 'delete';
   }
   return 'other';
 }
 
-function friendlyPrefix(action: ReturnType<typeof actionFrom>) {
+function friendlyPrefix(action: ReturnType<typeof actionFrom>): string {
+  const base = 'No se pudo';
   switch (action) {
     case 'create':
-      return 'No se pudo crear el producto';
+      return `${base} crear el producto`;
     case 'update':
-      return 'No se pudo actualizar el producto';
+      return `${base} actualizar el producto`;
     case 'delete':
-      return 'No se pudo eliminar el producto';
+      return `${base} eliminar el producto`;
     case 'verify':
-      return 'No se pudo verificar el ID';
+      return `${base} verificar el ID`;
     default:
-      return 'Ocurrio un error';
+      return MESSAGES.unknown;
   }
 }
 
 function extractBackendMessage(err: HttpErrorResponse): string | null {
-  const body = err?.error;
-
+  const body = err?.error as BackendError | string | null;
   if (!body) return null;
 
   if (typeof body === 'string') return body;
 
-  if (typeof body === 'object' && 'message' in body && typeof body.message === 'string') {
-    return body.message as string;
+  if (body.message) return body.message;
+
+  if (body.errors) {
+    const values = Object.values(body.errors);
+    const messages = values
+      .map((v) => (typeof v === 'string' ? v : v?.message))
+      .filter((t): t is string => Boolean(t));
+
+    return messages.join(' · ') || null;
   }
 
-  if (typeof body === 'object' && 'errors' in body) {
-    const errors = (body as any).errors;
-    if (Array.isArray(errors)) {
-      const joined = errors
-        .map((e: any) => (typeof e === 'string' ? e : e?.message))
-        .filter(Boolean)
-        .join(' . ');
-      if (joined) return joined;
-    } else if (errors && Object.values(errors)) {
-      const joined = Object.values(errors)
-        .map((v: any) => (typeof v === 'string' ? v : v?.message))
-        .filter(Boolean)
-        .join(' · ');
-      if (joined) return joined;
-    }
-  }
   return null;
+}
+
+function composeMessage(prefix: string, detail?: string | null): string {
+  const p = prefix.trim().replace(/[.:]+$/, '');
+  const d = (detail ?? '').trim();
+  return !d || d.toLowerCase().startsWith(p.toLowerCase()) ? p : `${p}. ${d}`;
 }
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -73,17 +82,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       let detail =
         extractBackendMessage(err) ||
-        (err.status === 0 ? 'Sin conexion con el servidor' : err.statusText || 'Error inesperado');
+        (err.status === 0 ? MESSAGES.network : err.statusText || MESSAGES.unexpected);
 
       if (err.status === 400 && action === 'create') {
-        detail = 'No se pudo crear el producto. Datos inválidos.';
+        detail = MESSAGES.invalidData;
       }
-
       if (err.status === 404 && (action === 'update' || action === 'delete')) {
-        detail = 'Producto no encontrado con ese identificador.';
+        detail = MESSAGES.notFound;
       }
 
-      toast.error(`${prefix}. ${detail}`);
+      toast.error(composeMessage(prefix, detail));
 
       return throwError(() => err);
     }),

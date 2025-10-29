@@ -1,0 +1,198 @@
+.form-container {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  max-width: 750px;
+  margin: 2rem auto;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0 0 2rem 0;
+    width: 100%;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #222;
+    }
+
+    input {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: border 0.2s ease;
+      font-family: inherit;
+
+      &.ng-invalid.ng-touched {
+        border-color: #e53935;
+        background-color: #fff5f5;
+      }
+    }
+  }
+
+  .error {
+    small {
+      color: #e53935;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+
+    button {
+      &.secondary,
+      &.primary {
+        padding: 0.75rem 2.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+      }
+
+      &.secondary {
+        background-color: #f4f6fb;
+        color: #2c3b69;
+      }
+
+      &.primary {
+        background-color: var(--primary-color);
+        color: #2c3b69;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        opacity: 0.85;
+      }
+    }
+  }
+
+  .back-button {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  }
+
+  .file-input-wrapper {
+    input[type='file'] {
+      width: 100%;
+      padding: 0.45rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:focus {
+        border-color: var(--secondary-dark, #2c3b69);
+        box-shadow: 0 0 0 3px rgba(44, 59, 105, 0.15);
+      }
+    }
+  }
+
+  .image-preview {
+    margin-top: 0.5rem;
+
+    img {
+      max-height: 80px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      object-fit: contain;
+    }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(44, 59, 105, 0.25);
+    border-top-color: var(--primary-color, #2c3b69);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: -2px;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 2rem 1rem;
+    margin: 1rem;
+
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      width: 98%;
+
+      input {
+        width: 98%;
+      }
+    }
+
+    .form-buttons {
+      flex-direction: column;
+      gap: 1rem;
+
+      button {
+        width: 98%;
+      }
+    }
+
+    .back-button {
+      top: 1rem;
+      right: 1rem;
+    }
+  }
+}

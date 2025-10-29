@@ -79,9 +79,9 @@ describe('ProductsListComponent', () => {
     expect(component.trackById(7, itemWithoutId as any)).toBe(7);
   });
 
-  it('createProduct should navigate to products/create', () => {
+  it('createProduct should navigate to products/new', () => {
     component.createProduct();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['products/create']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['products/new']);
   });
 
   it('ngOnDestroy should complete streams without throwing', () => {

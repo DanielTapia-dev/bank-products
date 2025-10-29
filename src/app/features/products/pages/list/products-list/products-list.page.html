@@ -1,1 +1,62 @@
-<p>products-list works!</p>
+<section class="bank-products" *ngIf="vm$ | async as vm">
+  <div class="search-row">
+    <input
+      #q
+      type="search"
+      class="search-input"
+      placeholder="Search..."
+      (search)="onSearchInput(q.value)"
+      (keyup.enter)="onSearchInput(q.value)"
+      aria-label="Buscar productos"
+    />
+    <button class="primary" (click)="createProduct()">Agregar</button>
+  </div>
+
+  <div class="card">
+    <div class="content-scroll">
+      <div class="grid header">
+        <div>Logo</div>
+        <div>Nombre del producto</div>
+        <div>
+          Descripción
+          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+        </div>
+        <div>
+          Fecha de liberación
+          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+        </div>
+        <div>
+          Fecha de reestructuración
+          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+        </div>
+      </div>
+
+      <ng-container *ngIf="!vm.error; else errorTpl">
+        <div class="grid row" *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById">
+          <div class="logo">
+            <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />
+            <span *ngIf="!p.logo" class="logo-fallback">{{ p.name | slice:0:2 }}</span>
+          </div>
+          <div class="name">{{ p.name }}</div>
+          <div class="desc">{{ p.description }}</div>
+          <div class="date">{{ p.date_release | date:'dd/MM/yyyy' }}</div>
+          <div class="date">{{ p.date_revision | date:'dd/MM/yyyy' }}</div>
+        </div>
+
+        <div class="progressbar"><span class="bar"></span></div>
+        <div class="footer">
+          <span>{{ (vm.items | slice:0:vm.size).length }} Resultados</span>
+          <select [value]="vm.size" #sz (change)="onSizeChange(sz.value)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </ng-container>
+    </div>
+
+    <ng-template #errorTpl>
+      <div class="error">⚠ {{ vm.error }}</div>
+    </ng-template>
+  </div>
+</section>

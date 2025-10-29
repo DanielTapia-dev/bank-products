@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, type Subscription, throwError } from 'rxjs';
 import { ProductsApiService } from '../features/products/services/products-api.service';
 import type { Product } from '../features/products/models/product.model';
 import { ProductsStore } from './products.state';
@@ -7,6 +7,13 @@ import { ProductsStore } from './products.state';
 describe('ProductsStore', () => {
   let store: ProductsStore;
   let api: jest.Mocked<ProductsApiService>;
+  let sub: Subscription;
+
+  const makeProducts = (): Product[] => [
+    { id: 1, name: 'Alpha', description: 'Banco XYZ' } as unknown as Product,
+    { id: 2, name: 'Beta', description: 'Otro texto' } as unknown as Product,
+    { id: 3, name: 'Gamma', description: undefined as any } as unknown as Product,
+  ];
 
   const makeItems = (n = 1): Product[] =>
     Array.from({ length: n }).map(
@@ -23,6 +30,11 @@ describe('ProductsStore', () => {
     });
 
     store = TestBed.inject(ProductsStore);
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    sub?.unsubscribe();
     jest.clearAllMocks();
   });
 
@@ -63,16 +75,15 @@ describe('ProductsStore', () => {
     expect(store.snapshot.error).toBe('No se pudo cargar la lista');
   });
 
-  it('setQuery with q, reset, page=1 and call load', () => {
-    api.list.mockReturnValue(of([] as Product[]));
-
+  it('setQuery updates q, resets page=1 and does NOT call load (client-side filtering)', () => {
     const spyLoad = jest.spyOn(store, 'load');
+
     store.setQuery('abc');
 
     expect(store.snapshot.q).toBe('abc');
     expect(store.snapshot.page).toBe(1);
-    expect(spyLoad).toHaveBeenCalledTimes(1);
-    expect(api.list).toHaveBeenCalledWith({ q: 'abc', page: 1, size: 10 });
+    expect(spyLoad).not.toHaveBeenCalled();
+    expect(api.list).not.toHaveBeenCalled();
   });
 
   it('setPage change page and call load with current parameters', () => {
@@ -98,5 +109,20 @@ describe('ProductsStore', () => {
     expect(store.snapshot.size).toBe(10);
     expect(store.snapshot.page).toBe(1);
     expect(api.list).toHaveBeenLastCalledWith({ q: '', page: 1, size: 10 });
+  });
+
+  it('vm$ should return empty if the search pattern not exists', async () => {
+    const items = makeProducts();
+    api.list.mockReturnValue(of(items));
+
+    const vmValues: any[] = [];
+    sub = store.vm$.subscribe((v) => vmValues.push(v));
+
+    store.load();
+    store.setQuery('nope');
+
+    const last = vmValues.at(-1);
+    expect(last.items).toEqual([]);
+    expect(last.total).toBe(0);
   });
 });

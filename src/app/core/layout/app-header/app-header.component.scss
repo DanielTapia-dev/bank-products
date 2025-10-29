@@ -1,0 +1,31 @@
+.header {
+  height: 60px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1px;
+  border-bottom: 1px solid var(--border-color);
+
+  .header-content {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: bold;
+    font-size: medium;
+
+    img {
+      height: 28px;
+      width: 28px;
+      stroke-width: 1;
+    }
+
+    &:focus {
+      outline: 2px solid var(--accent-color);
+    }
+  }
+}

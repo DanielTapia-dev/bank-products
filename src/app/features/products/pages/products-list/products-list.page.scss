@@ -29,44 +29,48 @@
   }
 
   .card {
-    overflow: hidden;
     margin: 0 auto;
     background: #fff;
     padding: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     max-height: 60vh;
     min-height: 0;
+    overflow: hidden;
+  }
+
+  .content-scroll {
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-gutter: stable both-edges;
+    overscroll-behavior: contain;
+    min-height: 0;
+    max-height: none;
+    flex: 1 1 auto;
   }
 
   .table-flow {
     width: max-content;
     min-width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: 80px 1.2fr 1.2fr 1fr 1fr;
-    column-gap: 0;
-    align-items: center;
-
-    &.header {
-      background: var(--back-color);
-      color: rgba(78, 78, 78, 0.75);
-      font-weight: 800;
-      font-size: 0.72rem;
-      border-bottom: 1px solid var(--border-color);
+  .bp-table {
+    thead.header {
       position: sticky;
       top: 0;
       z-index: 1;
+      background: var(--back-color);
+      color: rgba(78, 78, 78, 0.75);
 
-      > div {
+      th {
+        font-weight: 800;
+        font-size: 0.72rem;
+        text-align: left;
         padding: 18px 18px;
-
-        &:last-child {
-          border-right: 0;
-        }
+        border-bottom: 1px solid var(--border-color);
+        white-space: nowrap;
 
         .info {
           display: inline-flex;
@@ -81,44 +85,39 @@
       }
     }
 
-    &.row {
-      border-bottom: 1px solid var(--border-color);
+    tbody {
+      tr.row {
+        border-bottom: 1px solid var(--border-color);
 
-      > div {
-        padding: 10px 14px;
+        td {
+          padding: 10px 14px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
 
-        &:last-child {
-          border-right: 0;
+        &:hover {
+          background: #fbfcfe;
         }
       }
 
-      &:hover {
-        background: #fbfcfe;
+      tr.clickeable {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+        &:focus-within {
+          outline: 2px solid rgba(44, 59, 105, 0.3);
+          outline-offset: -2px;
+        }
       }
     }
   }
 
-  .clickeable {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-
-  .content-scroll {
-    overflow-y: auto;
-    overflow-x: auto;
-    scrollbar-gutter: stable both-edges;
-    overscroll-behavior: contain;
-    min-height: 0;
-    max-height: none;
-    flex: 1 1 auto;
-  }
-
   .logo {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -207,13 +206,6 @@
         outline: 0;
       }
     }
-  }
-
-  .error {
-    padding: 16px;
-    color: var(--error);
-    background: #fff1f1;
-    border-top: 1px solid var(--border-color);
   }
 }
 

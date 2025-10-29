@@ -18,6 +18,7 @@ interface ProductsState {
 @Injectable({ providedIn: 'root' })
 export class ProductsStore {
   private readonly api = inject(ProductsApiService);
+  private firstLoad = true;
 
   private readonly state$ = new BehaviorSubject<ProductsState>({
     items: [],
@@ -59,8 +60,11 @@ export class ProductsStore {
     this.api
       .list({ q, page, size })
       .pipe(
-        delay(2000),
-        finalize(() => this.patch({ loading: false })),
+        this.firstLoad ? delay(2000) : (source) => source,
+        finalize(() => {
+          this.patch({ loading: false });
+          this.firstLoad = false;
+        }),
       )
       .subscribe({
         next: (items) => {

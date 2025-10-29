@@ -18,57 +18,83 @@
 
   <div class="card">
     <div class="content-scroll">
-      <div class="grid header">
-        <div>Logo</div>
-        <div>Nombre del producto</div>
-        <div>
-          Descripción
-          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
-        </div>
-        <div>
-          Fecha de liberación
-          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
-        </div>
-        <div>
-          Fecha de reestructuración
-          <img src="../../../../assets/img/info.png" alt="Más" class="info" />
-        </div>
+      <table class="bp-table table-flow" role="table" aria-label="Productos">
+        <colgroup>
+          <col style="width: 80px" />
+          <col style="width: 27.5%" />
+          <col style="width: 27.5%" />
+          <col style="width: 22.5%" />
+          <col style="width: 22.5%" />
+        </colgroup>
+
+        <thead class="header">
+          <tr>
+            <th scope="col">Logo</th>
+            <th scope="col">Nombre del producto</th>
+            <th scope="col">
+              Descripción
+              <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+            </th>
+            <th scope="col">
+              Fecha de liberación
+              <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+            </th>
+            <th scope="col">
+              Fecha de reestructuración
+              <img src="../../../../assets/img/info.png" alt="Más" class="info" />
+            </th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="vm.loading">
+          <tr *ngFor="let _ of [1,2,3,4,5]">
+            <td>
+              <span
+                [appSkeleton]="true"
+                skelType="circle"
+                skelWidth="36px"
+                skelHeight="36px"
+              ></span>
+            </td>
+            <td><span [appSkeleton]="true" skelWidth="20%"></span></td>
+            <td>
+              <span [appSkeleton]="true" skelWidth="30%"></span>
+            </td>
+            <td><span [appSkeleton]="true" skelWidth="20%"></span></td>
+            <td><span [appSkeleton]="true" skelWidth="20%"></span></td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="!vm.loading">
+          <tr
+            class="row clickeable"
+            *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById"
+            [routerLink]="['/products', p.id, 'edit']"
+            role="link"
+            tabindex="0"
+            (keydown.enter)="$event.preventDefault(); $any($event.currentTarget).click()"
+            (keydown.space)="$event.preventDefault(); $any($event.currentTarget).click()"
+          >
+            <td class="logo">
+              <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />
+              <span *ngIf="!p.logo" class="logo-fallback">{{ p.name | slice:0:2 }}</span>
+            </td>
+            <td skelWidth="20%" class="name">{{ p.name }}</td>
+            <td skelWidth="20%" class="desc">{{ p.description }}</td>
+            <td skelWidth="20%" class="date">{{ p.date_release | date:'dd/MM/yyyy' }}</td>
+            <td skelWidth="20%" class="date">{{ p.date_revision | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="progressbar"><span class="bar"></span></div>
+      <div class="footer">
+        <span>{{ (vm.items | slice:0:vm.size).length }} Resultados</span>
+        <select [value]="vm.size" #sz (change)="onSizeChange(sz.value)">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select>
       </div>
-
-      <ng-container *ngIf="!vm.error; else errorTpl">
-        <ng-container *ngIf="vm.loading && (vm.items?.length ?? 0) === 0">
-          <div class="grid row" data-skel-row *ngFor="let _ of [1,2,3,4,5]"></div>
-        </ng-container>
-
-        <div
-          class="grid row clickeable"
-          *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById"
-          [routerLink]="['/products', p.id, 'edit']"
-          role="button"
-          tabindex="0"
-          (keydown.enter)="$event.preventDefault(); $any($event.target).click()"
-          (keydown.space)="$event.preventDefault(); $any($event.target).click()"
-        >
-          <div class="logo">
-            <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />
-            <span *ngIf="!p.logo" class="logo-fallback">{{ p.name | slice:0:2 }}</span>
-          </div>
-          <div class="name">{{ p.name }}</div>
-          <div class="desc">{{ p.description }}</div>
-          <div class="date">{{ p.date_release | date:'dd/MM/yyyy' }}</div>
-          <div class="date">{{ p.date_revision | date:'dd/MM/yyyy' }}</div>
-        </div>
-
-        <div class="progressbar"><span class="bar"></span></div>
-        <div class="footer">
-          <span>{{ (vm.items | slice:0:vm.size).length }} Resultados</span>
-          <select [value]="vm.size" #sz (change)="onSizeChange(sz.value)">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-          </select>
-        </div>
-      </ng-container>
     </div>
 
     <ng-template #errorTpl>

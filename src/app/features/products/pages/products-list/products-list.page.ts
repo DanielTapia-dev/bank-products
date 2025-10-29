@@ -4,11 +4,12 @@ import { ProductsStore } from '../../../../state/products.state';
 import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { SkeletonDirective } from '../../../../shared/skeleton/skeleton.directive';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SkeletonDirective],
   templateUrl: './products-list.page.html',
   styleUrl: './products-list.page.scss',
 })

@@ -48,7 +48,7 @@ export class ProductsListPage implements OnInit, OnDestroy {
   }
 
   createProduct() {
-    this.router.navigate(['products/create']);
+    this.router.navigate(['products/new']);
   }
 
   ngOnDestroy(): void {

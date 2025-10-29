@@ -1,1 +1,137 @@
-<p>product-create works!</p>
+<section class="form-container">
+  <button type="button" class="icon-button back-button" aria-label="Volver" (click)="goBack()">
+    <img src="assets/img/back.png" alt="" />
+  </button>
+
+  <h2>Formulario de Registro</h2>
+
+  <hr class="divider" />
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id">ID</label>
+        <input id="id" type="text" formControlName="id" [disabled]="true" aria-readonly="true" />
+      </div>
+
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          required
+          [attr.aria-invalid]="f['name'].invalid && (f['name'].touched || f['name'].dirty)"
+        />
+        <div class="error" *ngIf="f['name'].invalid && (f['name'].touched || f['name'].dirty)">
+          <small *ngIf="f['name'].errors?.['required']">Este campo es requerido!</small>
+          <small *ngIf="f['name'].errors?.['minlength'] || f['name'].errors?.['maxlength']">
+            Debe tener mínimo 6 caracteres y máximo 100!
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <input
+          id="description"
+          type="text"
+          formControlName="description"
+          required
+          [attr.aria-invalid]="f['description'].invalid && (f['description'].touched || f['description'].dirty)"
+        />
+        <div
+          class="error"
+          *ngIf="f['description'].invalid && (f['description'].touched || f['description'].dirty)"
+        >
+          <small *ngIf="f['description'].errors?.['required']">Este campo es requerido!</small>
+          <small
+            *ngIf="f['description'].errors?.['minlength'] || f['description'].errors?.['maxlength']"
+          >
+            Debe tener mínimo 10 caracteres y máximo 200!
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="logoFile">Logo</label>
+
+        <div class="file-input-wrapper">
+          <input
+            id="logoFile"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            [disabled]="isUploading"
+            [attr.aria-busy]="isUploading"
+          />
+        </div>
+
+        <div class="uploading" *ngIf="isUploading" aria-live="polite" style="margin-top: 0.4rem">
+          <span class="spinner" aria-hidden="true"></span> Subiendo imagen…
+        </div>
+
+        <div class="image-preview" *ngIf="logoPreviewUrl">
+          <img [src]="logoPreviewUrl" alt="Logo Preview" />
+        </div>
+
+        <input type="hidden" formControlName="logo" />
+
+        <div class="error" *ngIf="f['logo'].invalid && (f['logo'].touched || f['logo'].dirty)">
+          <small *ngIf="f['logo'].errors?.['required']">Este campo es requerido!</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date_release">Fecha Liberación</label>
+        <input
+          id="date_release"
+          type="date"
+          formControlName="date_release"
+          required
+          [attr.min]="todayStr"
+          (blur)="f['date_release'].markAsTouched()"
+          [attr.aria-invalid]="f['date_release'].invalid && (f['date_release'].touched || f['date_release'].dirty)"
+        />
+        <div
+          class="error"
+          *ngIf="f['date_release'].invalid && (f['date_release'].touched || f['date_release'].dirty)"
+        >
+          <small *ngIf="f['date_release'].errors?.['required']">Este campo es requerido!</small>
+          <small *ngIf="f['date_release'].errors?.['invalidReleaseDate']"
+            >La fecha debe ser mayor o igual a hoy</small
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="date_revision">Fecha Revisión</label>
+        <input
+          id="date_revision"
+          type="date"
+          formControlName="date_revision"
+          [disabled]="true"
+          aria-readonly="true"
+        />
+      </div>
+    </div>
+
+    <div class="form-buttons">
+      <button
+        type="button"
+        class="secondary"
+        (click)="resetForm()"
+        [disabled]="isEditMode || isUploading"
+      >
+        Reiniciar
+      </button>
+      <button type="submit" class="primary" [disabled]="form.invalid || isUploading">
+        {{ isUploading ? 'Subiendo…' : 'Enviar' }}
+      </button>
+    </div>
+  </form>
+</section>

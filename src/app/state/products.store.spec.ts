@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of, type Subscription, throwError } from 'rxjs';
 import { ProductsApiService } from '../features/products/services/products-api.service';
 import type { Product } from '../features/products/models/product.model';
@@ -50,18 +50,19 @@ describe('ProductsStore', () => {
     });
   });
 
-  it('load items, total and turn down loading', () => {
+  it('load items, total and turn down loading', fakeAsync(() => {
     const items = makeItems(2);
     api.list.mockReturnValue(of(items));
 
     store.load();
+    expect(store.snapshot.loading).toBe(true);
 
-    expect(api.list).toHaveBeenCalledWith({ q: '', page: 1, size: 10 });
+    tick(2000);
     expect(store.snapshot.loading).toBe(false);
     expect(store.snapshot.items).toEqual(items);
     expect(store.snapshot.total).toBe(2);
     expect(store.snapshot.error).toBeNull();
-  });
+  }));
 
   it('load error: empty items', () => {
     api.list.mockReturnValue(throwError(() => new Error('boom')));

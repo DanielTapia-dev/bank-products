@@ -4,6 +4,10 @@ Proyecto desarrollado en **Angular 17** como parte de la prueba técnica para Nt
 
 ---
 
+## ❗ Información Importante
+
+Se implemento un delay de 2 segundos en las peticiones al servidor para poder ver visualmente los skeletons
+
 ## Características principales implementadas hasta hoy
 
 | Área                 | Implementación                             |

@@ -1,4 +1,8 @@
-<section class="bank-products" *ngIf="vm$ | async as vm">
+<section
+  class="bank-products"
+  *ngIf="vm$ | async as vm"
+  [attr.data-skel-on]="vm.loading ? '' : null"
+>
   <div class="search-row">
     <input
       #q
@@ -32,6 +36,10 @@
       </div>
 
       <ng-container *ngIf="!vm.error; else errorTpl">
+        <ng-container *ngIf="vm.loading && (vm.items?.length ?? 0) === 0">
+          <div class="grid row" data-skel-row *ngFor="let _ of [1,2,3,4,5]"></div>
+        </ng-container>
+
         <div class="grid row" *ngFor="let p of (vm.items | slice:0:vm.size); trackBy: trackById">
           <div class="logo">
             <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />

@@ -19,7 +19,9 @@ Se implemento un delay de 2 segundos en las peticiones al servidor para poder ve
 | Estándares de código | ESLint mejorado para Angular               |
 | Formateo             | Prettier automático al guardar y commitear |
 | Clean Git            | Bloqueo de código sucio vía pre-commit     |
-| Calidad continua     | Bloqueo de push si coverage < 80%          |
+| Calidad continua     | Bloqueo de push si coverage < 70%          |
+| Rendimiento          | Lazy rendering                             |
+| Arquitectura         | Escalable, modular y desacoplada           |
 
 ---
 
@@ -68,17 +70,90 @@ En su lugar se implementó:
 
 ---
 
-### 🏗️ Arquitectura simple
+## 🧠 **Arquitectura y buenas prácticas**
 
-````txt
-Angular (Frontend) ── archivo → AWS S3
-        │
-        └── Obtiene credenciales seguras desde Cognito (IAM temporal)
+### 🧩 Estructura modular por feature
 
-Comandos:
+Cada módulo (features/products, shared, core, state) está diseñado para
+**independencia total** y **reutilización**.
+
+- `features/products` → Componentes y lógica de producto.
+- `shared` → Componentes, pipes, servicios comunes.
+- `core` → Configuración global, interceptores y guards.
+- `state` → Store reactivo basado en `BehaviorSubject`.
+
+### 🧰 Buenas prácticas aplicadas
+
+✅ Componentes **standalone** (sin NgModules)\
+✅ Reutilización de componentes compartidos (tabla, formularios,
+toasts)\
+✅ Código **type-safe** con TypeScript estricto (`"strict": true`)\
+✅ Uso de `trackBy` en \*ngFor para optimizar renderizado\\
+✅ Eliminación de dependencias innecesarias\
+✅ Convenciones consistentes con ESLint + Prettier
+
+---
+
+## ⚙️ **Pasos para ejecutar el proyecto**
+
+### 1️⃣ Clonar el repositorio
+
+```bash
+git clone https://github.com/<tu-usuario>/bank-products.git
+cd bank-products
+```
+
+### 2️⃣ Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3️⃣ Configurar variables de entorno
+
+En el archivo `src/environments/environment.ts` agregar tus credenciales
+de AWS Cognito y S3 (En caso de no tener):
+
+```typescript
+  production: false,
+  apiUrl: '/bp',
+  aws: {
+    region: 'us-east-2',
+    s3: {
+      bucket: 'daniel-nttdata',
+      prefix: 'products/',
+      maxSizeMB: 5,
+      allowedTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+      publicBaseUrl: '',
+    },
+    cognito: {
+      identityPoolId: 'us-east-2:7dd387cd-1a34-42d7-be5e-8722787c3f9c',
+    },
+  },
+```
+
+### 4️⃣ Ejecutar el proyecto en modo desarrollo
+
+```bash
+npm start
+```
+
+Abrir <http://localhost:4200> para ver la aplicación.
+
+### 5️⃣ Ejecutar pruebas unitarias
 
 ```bash
 npm run test
-npm run test:watch
+```
+
+### 6️⃣ Ver cobertura de código
+
+```bash
 npm run test:cov
-````
+```
+
+### 7️⃣ Ejecutar linters manualmente
+
+```bash
+npm run lint
+```

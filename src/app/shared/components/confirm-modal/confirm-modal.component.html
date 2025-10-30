@@ -1,0 +1,16 @@
+<div class="modal" *ngIf="visible">
+  <div class="modal-card">
+    <p>{{ message || '¿Seguro que deseas continuar?' }}</p>
+    <br />
+    <br />
+    <div class="modal-divider"></div>
+    <div class="actions">
+      <button class="secondary" (click)="cancel.emit()">
+        {{ cancelText || 'Cancelar' }}
+      </button>
+      <button class="primary danger" (click)="confirm.emit()">
+        {{ confirmText || 'Eliminar' }}
+      </button>
+    </div>
+  </div>
+</div>

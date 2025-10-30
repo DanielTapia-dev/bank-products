@@ -11,7 +11,26 @@
     <div class="form-row">
       <div class="form-group">
         <label for="id">ID</label>
-        <input id="id" type="text" formControlName="id" [disabled]="true" aria-readonly="true" />
+        <input
+          id="id"
+          type="text"
+          formControlName="id"
+          aria-describedby="idHelp idErr"
+          [attr.aria-readonly]="isEditMode ? 'true' : null"
+          [attr.aria-invalid]="idCtrl.invalid && (idCtrl.dirty || idCtrl.touched)"
+        />
+
+        <div id="idErr" class="error" *ngIf="(idCtrl.dirty || idCtrl.touched)">
+          <small *ngIf="idCtrl.pending">Validando ID…</small>
+          <small *ngIf="idCtrl.errors?.['required']">El ID es obligatorio.</small>
+          <small *ngIf="idCtrl.errors?.['minlength']">Mínimo 3 caracteres.</small>
+          <small *ngIf="idCtrl.errors?.['maxlength']">Máximo 20 caracteres.</small>
+          <small *ngIf="idCtrl.errors?.['pattern']">Formato inválido.</small>
+          <small *ngIf="idCtrl.errors?.['idTaken']">Este ID ya está en uso.</small>
+          <small *ngIf="idCtrl.errors?.['idCheckFailed']"
+            >No se pudo validar el ID. Intenta nuevamente.</small
+          >
+        </div>
       </div>
 
       <div class="form-group">
@@ -114,7 +133,6 @@
           id="date_revision"
           type="date"
           formControlName="date_revision"
-          [disabled]="true"
           aria-readonly="true"
         />
       </div>
@@ -124,12 +142,17 @@
       <button
         type="button"
         class="secondary"
-        (click)="resetForm()"
+        (click)="resetForm()
+        "
         [disabled]="isEditMode || isUploading"
       >
         Reiniciar
       </button>
-      <button type="submit" class="primary" [disabled]="form.invalid || isUploading">
+      <button
+        type="submit"
+        class="primary"
+        [disabled]="form.invalid || isUploading || idCtrl.pending"
+      >
         {{ isUploading ? 'Subiendo…' : 'Enviar' }}
       </button>
     </div>

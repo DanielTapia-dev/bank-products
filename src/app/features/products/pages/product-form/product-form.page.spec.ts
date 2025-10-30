@@ -5,7 +5,7 @@ import { ProductFormPage } from './product-form.page';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsApiService } from '../../services/products-api.service';
 import { ProductsStore } from '../../../../state/products.state';
-import { S3StorageService } from '../../../../shared/s3/s3-storage.service';
+import { S3StorageService } from '../../../../shared/utils/s3/s3-storage.service';
 
 describe('ProductCreatePage (full simple coverage)', () => {
   let component: ProductFormPage;

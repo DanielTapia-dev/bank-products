@@ -43,6 +43,7 @@
               Fecha de reestructuración
               <img src="../../../../assets/img/info.png" alt="Más" class="info" />
             </th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
 
@@ -62,6 +63,7 @@
             </td>
             <td><span [appSkeleton]="true" skelWidth="20%"></span></td>
             <td><span [appSkeleton]="true" skelWidth="20%"></span></td>
+            <td></td>
           </tr>
         </tbody>
         <tbody *ngIf="!vm.loading">
@@ -78,10 +80,19 @@
               <img *ngIf="p.logo" [src]="p.logo" class="logo-img" alt="logo producto" />
               <span *ngIf="!p.logo" class="logo-fallback">{{ p.name | slice:0:2 }}</span>
             </td>
-            <td skelWidth="20%" class="name">{{ p.name }}</td>
-            <td skelWidth="20%" class="desc">{{ p.description }}</td>
-            <td skelWidth="20%" class="date">{{ p.date_release | date:'dd/MM/yyyy' }}</td>
-            <td skelWidth="20%" class="date">{{ p.date_revision | date:'dd/MM/yyyy' }}</td>
+            <td class="name">{{ p.name }}</td>
+            <td class="desc">{{ p.description }}</td>
+            <td class="date">{{ p.date_release | date:'dd/MM/yyyy' }}</td>
+            <td class="date">{{ p.date_revision | date:'dd/MM/yyyy' }}</td>
+            <td class="actions">
+              <button class="action-btn" (click)="toggleMenu(p.id, $event)">⋮</button>
+              <div class="dropdown" *ngIf="openMenuId === p.id">
+                <button (click)="onEdit(p, $event)">✏️ Editar</button>
+                <button (click)="openDelete(p, $event)" [disabled]="isDeleting(p.id)">
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -96,9 +107,15 @@
         </select>
       </div>
     </div>
-
-    <ng-template #errorTpl>
-      <div class="error">⚠ {{ vm.error }}</div>
-    </ng-template>
   </div>
 </section>
+
+<app-confirm-modal
+  [visible]="confirmOpen"
+  [message]="'¿Estas seguro que eliminar el producto“' + confirmTargetName + '”?'"
+  [confirmText]="'Confirmar'"
+  [cancelText]="'Cancelar'"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+>
+</app-confirm-modal>

@@ -97,4 +97,35 @@ export class ProductsStore {
   private patch(partial: Partial<ProductsState>): void {
     this.state$.next({ ...this.snapshot, ...partial });
   }
+
+  remove(id: string): void {
+    const { items, page, size } = this.snapshot;
+
+    const prevItems = [...items];
+    const nextItems = items.filter((item) => item.id !== id);
+
+    this.patch({
+      items: nextItems,
+      total: nextItems.length,
+      error: null,
+    });
+
+    const currentPageCount = nextItems.slice((page - 1) * size, page * size).length;
+    const shouldGoBackPage = currentPageCount === 0 && page > 1;
+
+    this.api.remove(id).subscribe({
+      next: () => {
+        if (shouldGoBackPage) {
+          this.setPage(page - 1);
+        }
+      },
+      error: () => {
+        this.patch({
+          items: prevItems,
+          total: prevItems.length,
+          error: 'No se pudo eliminar el producto',
+        });
+      },
+    });
+  }
 }

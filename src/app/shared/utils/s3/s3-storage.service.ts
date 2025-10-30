@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client } from './cognito-s3.client';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class S3StorageService {

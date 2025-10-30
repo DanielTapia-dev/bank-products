@@ -1,9 +1,12 @@
+@use 'styles/variables' as *;
+
 .bank-products {
   padding-block: 1.5rem;
   padding-inline: 1.5rem;
   background: white;
 
   .search-row {
+    margin-left: 3rem;
     margin: 0 auto 1rem;
     display: flex;
     justify-content: space-between;
@@ -42,7 +45,6 @@
   .content-scroll {
     overflow-y: auto;
     overflow-x: auto;
-    scrollbar-gutter: stable both-edges;
     overscroll-behavior: contain;
     min-height: 0;
     max-height: none;
@@ -209,11 +211,79 @@
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
+.actions {
+  text-align: center;
+
+  .action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
   }
-  100% {
-    background-position: 200px 0;
+
+  .dropdown {
+    top: 30px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 6px 12px;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
   }
+}
+
+@media (max-width: $bp-lg) {
+  .bp-table thead th:nth-child(3),
+  .bp-table tbody td:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: $bp-md) {
+  .bp-table thead th:nth-child(5),
+  .bp-table tbody td:nth-child(5) {
+    display: none;
+  }
+  .bank-products .search-row {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .bank-products .search-row .search-input {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: $bp-sm) {
+  .bank-products .search-row .search-input,
+  .bank-products .search-row .primary {
+    width: 100%;
+  }
+}
+
+.bp-table .logo .logo-img {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  object-fit: cover;
+}
+.bp-table thead .info {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
 }

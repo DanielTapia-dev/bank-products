@@ -1,4 +1,5 @@
-@import 'styles/skeleton';
+@use 'styles/variables' as *;
+@import 'skeleton';
 
 :root {
   --primary-color: #fdd835;

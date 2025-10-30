@@ -58,22 +58,11 @@ export class ProductFormPage implements OnInit {
         });
         this.logoPreviewUrl = product.logo || null;
       });
-    } else {
-      this.form.get('id')?.setValue(this.generateUUID());
     }
 
     this.form.get('date_release')?.valueChanges.subscribe((value) => {
       this.updateRevisionDate(value as string);
       this.form.get('date_release')?.markAsTouched();
-    });
-  }
-
-  private generateUUID(): string {
-    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
     });
   }
 
@@ -158,9 +147,8 @@ export class ProductFormPage implements OnInit {
 
   resetForm(): void {
     if (this.isEditMode) return;
-    const newUuid = this.generateUUID();
     this.form.reset();
-    this.form.get('id')?.setValue(newUuid);
+    this.form.get('id')?.setValue('');
     this.form.get('date_revision')?.reset();
     this.logoPreviewUrl = null;
   }

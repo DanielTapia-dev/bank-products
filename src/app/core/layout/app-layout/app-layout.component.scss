@@ -1,17 +1,26 @@
 .main-layout {
   display: flex;
-  height: calc(100vh - 60px);
+  min-height: calc(100dvh - 60px);
   background-color: var(--auxiliary-color);
 
   .main-content {
     flex: 1;
-    padding: 24px;
-    margin-top: 2rem;
-    margin-inline: 5rem;
+    min-width: 0;
+    overflow: auto;
+    padding-left: max(clamp(16px, 4vw, 80px), env(safe-area-inset-left));
+    padding-right: max(clamp(16px, 4vw, 80px), env(safe-area-inset-right));
+    padding-top: clamp(16px, 2vh, 24px);
+    padding-bottom: clamp(16px, 2vh, 24px);
+    margin-top: clamp(8px, 2vh, 32px);
+  }
+}
 
-    @media screen and (max-width: 1000px) {
-      margin-inline: 1rem;
-      padding: 1rem;
-    }
+@media (max-width: 1000px) {
+  .main-layout .main-content {
+    padding-left: max(clamp(12px, 4vw, 24px), env(safe-area-inset-left));
+    padding-right: max(clamp(12px, 4vw, 24px), env(safe-area-inset-right));
+    padding-top: clamp(12px, 2vh, 20px);
+    padding-bottom: clamp(12px, 2vh, 20px);
+    margin-top: clamp(8px, 1.5vh, 24px);
   }
 }

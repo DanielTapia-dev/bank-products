@@ -1,30 +1,8 @@
-[data-skel-on] {
-  pointer-events: none;
-}
-
-.grid.row[data-skel-row] {
-  position: relative;
-  min-height: 2rem;
-  margin-bottom: 2px;
-}
-
-[data-skel-on] .grid.row[data-skel-row] > * {
-  opacity: 0;
-}
-
-.grid.row[data-skel-row]::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.05) 0%,
-    rgba(0, 0, 0, 0.15) 50%,
-    rgba(0, 0, 0, 0.05) 100%
-  );
-  background-size: 200% 100%;
-  animation: skel-shimmer 2s ease-in-out infinite;
+:root {
+  --skel-base: rgba(0, 0, 0, 0.06);
+  --skel-mid: rgba(0, 0, 0, 0.15);
+  --skel-speed: 1.2s;
+  --skel-h: 0.9rem;
 }
 
 @keyframes skel-shimmer {
@@ -33,5 +11,52 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+.skel-host {
+  position: relative;
+}
+
+.skel-hide-content {
+  color: transparent !important;
+}
+
+.skel-hide-content > *:not(.skel) {
+  opacity: 0 !important;
+}
+
+.skel {
+  display: block;
+  width: var(--skel-w, 70%);
+  height: var(--skel-h);
+  margin: 0.35rem 14px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--skel-base) 25%,
+    var(--skel-mid) 50%,
+    var(--skel-base) 63%
+  );
+  background-size: 400% 100%;
+  animation: skel-shimmer var(--skel-speed) ease-in-out infinite;
+  pointer-events: none;
+}
+
+.skel--circle {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50%;
+  margin: 4px 14px;
+}
+
+.skel--block {
+  min-width: 100% !important;
+  height: var(--skel-h) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
   }
 }

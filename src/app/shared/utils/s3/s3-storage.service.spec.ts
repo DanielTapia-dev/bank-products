@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { S3StorageService } from './s3-storage.service';
 import { s3Client } from './cognito-s3.client';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 jest.mock('./cognito-s3.client', () => ({
   s3Client: { send: jest.fn() },

@@ -1,6 +1,6 @@
 import type { HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ToastService } from '../../shared/toast/services/toast.service';
+import { ToastService } from '../../shared/components/toast/services/toast.service';
 import { catchError, throwError } from 'rxjs';
 
 interface BackendError {

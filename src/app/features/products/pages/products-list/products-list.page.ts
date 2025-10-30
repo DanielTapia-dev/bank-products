@@ -4,11 +4,13 @@ import { ProductsStore } from '../../../../state/products.state';
 import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { SkeletonDirective } from '../../../../shared/utils/skeleton/skeleton.directive';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SkeletonDirective, ConfirmModalComponent],
   templateUrl: './products-list.page.html',
   styleUrl: './products-list.page.scss',
 })
@@ -22,6 +24,54 @@ export class ProductsListPage implements OnInit, OnDestroy {
   readonly pageSizes = [5, 10, 20];
 
   pageSized = [5, 10, 20];
+
+  openMenuId: string | null = null;
+  confirmOpen = false;
+  confirmTargetId: string | null = null;
+  confirmTargetName = '';
+
+  toggleMenu(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === id ? null : id;
+  }
+
+  onEdit(product: Product, event: MouseEvent) {
+    event.stopPropagation();
+    this.router.navigate(['/products', product.id, 'edit']);
+  }
+
+  onDelete(product: Product, event: MouseEvent) {
+    event.stopPropagation();
+  }
+
+  openDelete(p: Product, ev: MouseEvent) {
+    ev.stopPropagation();
+    this.confirmTargetId = p.id;
+    this.confirmTargetName = p.name ?? '';
+    this.confirmOpen = true;
+    this.openMenuId = null;
+  }
+
+  confirmDelete() {
+    if (this.confirmTargetId) {
+      this.store.remove(this.confirmTargetId);
+    }
+    this.resetConfirm();
+  }
+
+  cancelDelete() {
+    this.resetConfirm();
+  }
+
+  private resetConfirm() {
+    this.confirmOpen = false;
+    this.confirmTargetId = null;
+    this.confirmTargetName = '';
+  }
+
+  isDeleting(id: string): boolean {
+    return (this.store as any).isDeleting ? (this.store as any).isDeleting(id) : false;
+  }
 
   ngOnInit(): void {
     this.store.load();

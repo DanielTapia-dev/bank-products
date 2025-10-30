@@ -6,15 +6,12 @@ import {
   Validators,
   AbstractControl,
   ValidationErrors,
-  AsyncValidatorFn,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, catchError, switchMap, timer, of } from 'rxjs';
-import { ProductsApiService } from '../../services/products-api.service';
-import { ProductsStore } from '../../../../state/products.state';
-import { Product } from '../../models/product.model';
-import { S3StorageService } from '../../../../shared/utils/s3/s3-storage.service';
-import { ToastService } from '../../../../shared/components/toast/services/toast.service';
+import { ProductsApiService } from '../../../services/products-api.service';
+import { ProductsStore } from '../../../../../state/products.state';
+import { Product } from '../../../models/product.model';
+import { S3StorageService } from '../../../../../shared/utils/s3/s3-storage.service';
 
 @Component({
   selector: 'app-product-form',
@@ -30,7 +27,6 @@ export class ProductFormPage implements OnInit {
   private readonly api = inject(ProductsApiService);
   private readonly store = inject(ProductsStore);
   private readonly directS3 = inject(S3StorageService);
-  private readonly toast = inject(ToastService);
 
   logoPreviewUrl: string | null = null;
   isEditMode = false;
@@ -38,19 +34,7 @@ export class ProductFormPage implements OnInit {
   todayStr = new Date().toISOString().substring(0, 10);
 
   form = this.fb.group({
-    id: [
-      '',
-      {
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(20),
-          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
-        ],
-        asyncValidators: [],
-        updateOn: 'change',
-      },
-    ],
+    id: [{ value: '', disabled: true }],
     name: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
     logo: ['', [Validators.required]],
@@ -72,33 +56,14 @@ export class ProductFormPage implements OnInit {
           date_release: product.date_release,
           date_revision: product.date_revision,
         });
-        this.idCtrl.disable({ emitEvent: false });
         this.logoPreviewUrl = product.logo || null;
       });
-    } else {
-      this.idCtrl.setAsyncValidators(this.idAvailableValidator());
-      this.idCtrl.updateValueAndValidity({ emitEvent: false });
-      this.idCtrl.enable({ emitEvent: false });
     }
 
     this.form.get('date_release')?.valueChanges.subscribe((value) => {
       this.updateRevisionDate(value as string);
       this.form.get('date_release')?.markAsTouched();
     });
-  }
-
-  private idAvailableValidator(): AsyncValidatorFn {
-    return (control) => {
-      if (this.isEditMode) return of(null);
-      const raw = (control.value ?? '').toString().trim();
-      if (!raw) return of(null);
-
-      return timer(300).pipe(
-        switchMap(() => this.api.verifyId(raw)),
-        map((isUsed) => (isUsed ? { idTaken: true } : null)),
-        catchError(() => of({ idCheckFailed: true })),
-      );
-    };
   }
 
   private updateRevisionDate(releaseDateStr: string) {
@@ -146,7 +111,7 @@ export class ProductFormPage implements OnInit {
   }
 
   submitForm(): void {
-    if (this.form.invalid || this.isUploading || this.idCtrl.pending) return;
+    if (this.form.invalid || this.isUploading) return;
 
     const raw = this.form.getRawValue();
     const product: Product = {
@@ -160,25 +125,32 @@ export class ProductFormPage implements OnInit {
 
     const onDone = () => {
       this.store.load();
-      this.toast.success('Producto guardado correctamente', 2000);
       this.router.navigate(['/products']);
     };
 
     if (this.isEditMode) {
-      this.api.update(product.id, product).subscribe({ next: onDone });
+      this.api.update(product.id, product).subscribe({
+        next: onDone,
+        error: () => {
+          //TODO: manejar errores
+        },
+      });
     } else {
-      this.api.create(product).subscribe({ next: onDone });
+      this.api.create(product).subscribe({
+        next: onDone,
+        error: () => {
+          //TODO: manejar errores
+        },
+      });
     }
   }
 
   resetForm(): void {
     if (this.isEditMode) return;
     this.form.reset();
-    this.idCtrl.enable({ emitEvent: false });
+    this.form.get('id')?.setValue('');
     this.form.get('date_revision')?.reset();
     this.logoPreviewUrl = null;
-
-    this.idCtrl.updateValueAndValidity();
   }
 
   goBack(): void {
@@ -187,9 +159,5 @@ export class ProductFormPage implements OnInit {
 
   get f() {
     return this.form.controls;
-  }
-
-  get idCtrl() {
-    return this.form.get('id')!;
   }
 }
